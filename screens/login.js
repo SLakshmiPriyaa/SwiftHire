@@ -23,6 +23,7 @@ import {
 } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {NavigationEvents} from 'react-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
 class login extends React.Component {
   constructor(props) {
     super(props);
@@ -30,7 +31,7 @@ class login extends React.Component {
       wishes: null,
       Username: null,
       UsernameError: false,
-      Password: null,
+
       PasswordError: false,
     };
   }
@@ -72,15 +73,20 @@ class login extends React.Component {
     }
   };
   check() {
+    const mreg = /^[0-9]*$/;
     // console.log();
     this.setState({UsernameError: false, PasswordError: false});
     if (this.state.Username == null) {
       this.setState({UsernameError: true});
-    } else if (this.state.Password == null) {
+    } else if (
+      mreg.test(this.state.Username) != true ||
+      this.state.Username.length != 10
+    ) {
       this.setState({PasswordError: true});
     } else {
-      this.setState({UsernameError: false, PasswordError: false}, () => {
-        this.props.navigation.push('home');
+      this.setState({UsernameError: false, PasswordError: false}, async () => {
+        AsyncStorage.setItem('MobileNumber', this.state.Username.toString());
+        this.props.navigation.push('otp');
       });
     }
   }
@@ -111,7 +117,7 @@ class login extends React.Component {
                   // alignContent: 'center',
                 }}
                 resizeMode="stretch"
-                source={require('../assets/Logo3.png')}
+                source={require('../assets/logo.png')}
               />
             </View>
 
@@ -122,10 +128,24 @@ class login extends React.Component {
                 fontFamily: 'WorkSans-Bold',
                 marginTop: hp('7%'),
                 color: '#333',
-                marginBottom: hp('15%'),
+                // marginBottom: hp('15%'),
                 // lineHeight: hp('2.5%'),
               }}>
-              Login with UserName & Password
+              Register With Mobile Number
+            </Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 15,
+                fontFamily: 'WorkSans-Regular',
+                marginTop: hp('3%'),
+                color: '#333',
+                // lineHeight: hp('2.5%'),
+                marginBottom: hp('18%'),
+                marginLeft: wp('3%'),
+                marginRight: wp('3%'),
+              }}>
+              We will send OTP to verify your Mobile Number
             </Text>
           </View>
           <View
@@ -160,7 +180,7 @@ class login extends React.Component {
                 marginTop: hp('5%'),
                 backgroundColor: 'white',
                 height: hp('5.5%'),
-                width: wp('75%'),
+                width: wp('80%'),
                 alignSelf: 'center',
                 flexDirection: 'row',
                 // paddingLeft: wp('12%'),a
@@ -173,20 +193,21 @@ class login extends React.Component {
                   // marginTop: hp('-4.2%'),
                   // marginLeft: wp('-16%'),
                   // paddingLeft: wp('-4%'),
-                  paddingLeft: wp('1%'),
+                  paddingLeft: wp('5%'),
                 }}
                 // onPress={this.setPasswordVisibility}
                 activeOpacity={0.5}
-                name="person-circle"
+                name="phone-portrait"
                 color={'#ffbd80'}
                 size={hp('3%')}
               />
               <TextInput
-                placeholder="Enter Your UserName"
+                placeholder="Enter Your Mobile Number"
                 fontFamily={'WorkSans-Regular'}
                 placeholderTextColor={'gray'}
                 color={'black'}
-                maxLength={100}
+                maxLength={10}
+                keyboardType={'number-pad'}
                 fontSize={14}
                 onChangeText={value =>
                   this.handleInputChange('Username', value)
@@ -195,72 +216,23 @@ class login extends React.Component {
                   // paddingLeft: wp('1%'),
                   padding: hp('0.5%'),
                   marginLeft: wp('2%'),
-                  width: wp('60%'),
+                  width: wp('70%'),
                   alignItems: 'center',
                   alignSelf: 'center',
                 }}
               />
             </View>
             {this.state.UsernameError == true ? (
-              <Text style={styles.errorMessage}>* Please enter UserName.</Text>
+              <Text style={styles.errorMessage}>
+                * Please enter Mobile Number.
+              </Text>
+            ) : null}
+            {this.state.PasswordError == true ? (
+              <Text style={styles.errorMessage}>
+                * Please enter valid Mobile Number.
+              </Text>
             ) : null}
 
-            <View
-              style={{
-                justifyContent: 'center',
-                borderWidth: wp('0.3%'),
-                borderRadius: wp('2%'),
-                // padding: 5,
-                // height: hp('8%'),
-                marginBottom: hp('3%'),
-                borderColor: '#333',
-                marginTop: hp('3%'),
-                backgroundColor: 'white',
-                height: hp('5.5%'),
-                width: wp('75%'),
-                alignSelf: 'center',
-                flexDirection: 'row',
-                // paddingLeft: wp('12%'),a
-                alignItems: 'center',
-              }}>
-              <Icon
-                style={{
-                  // width: wp('10%'),
-                  // marginRight: hp('2%'),
-                  // marginTop: hp('-4.2%'),
-                  // marginLeft: wp('-16%'),
-                  // paddingLeft: wp('-4%'),
-                  paddingLeft: wp('1%'),
-                }}
-                // onPress={this.setPasswordVisibility}
-                activeOpacity={0.5}
-                name="lock-closed"
-                color={'#ffbd80'}
-                size={hp('3%')}
-              />
-              <TextInput
-                placeholder="Enter Your Password"
-                fontFamily={'WorkSans-Regular'}
-                placeholderTextColor={'gray'}
-                color={'black'}
-                maxLength={100}
-                fontSize={14}
-                onChangeText={value =>
-                  this.handleInputChange('Password', value)
-                }
-                style={{
-                  // paddingLeft: wp('1%'),
-                  padding: hp('0.5%'),
-                  marginLeft: wp('2%'),
-                  width: wp('60%'),
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                }}
-              />
-            </View>
-            {this.state.PasswordError == true ? (
-              <Text style={styles.errorMessage}>* Please enter Password.</Text>
-            ) : null}
             <TouchableOpacity
               style={styles.SubmitButtonStyle}
               activeOpacity={0.5}
@@ -277,7 +249,7 @@ class login extends React.Component {
                   fontSize: 17,
                 }}>
                 {' '}
-                LOGIN{' '}
+                SEND OTP{' '}
               </Text>
             </TouchableOpacity>
           </View>

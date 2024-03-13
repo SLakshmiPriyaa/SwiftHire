@@ -18,6 +18,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {NavigationEvents} from 'react-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
 class Splash extends React.Component {
   constructor(props) {
     super(props);
@@ -25,6 +26,7 @@ class Splash extends React.Component {
       time: 2.5,
     };
   }
+
   componentWillMount() {
     //Start the method containing the timer
     this.startTimer();
@@ -41,23 +43,16 @@ class Splash extends React.Component {
           time: time,
         });
         if (time == -0.5) {
-          this.props.navigation.push('login');
+          const value = await AsyncStorage.getItem('isLogin');
+          console.log(value);
+          if (value !== null || value == 'true') {
+            this.props.navigation.navigate('tab');
+          } else {
+            this.props.navigation.navigate('login');
+          }
         }
-        // console.log(time);
       } else {
-        //When time=0, execute the end loop method
         clearInterval(timeChange);
-        //When the countdown time = 0, enter the project, routing jump is used here
-        // try {
-        //   const value = await AsyncStorage.getItem('isLogin');
-
-        //   console.log('value');
-        //   if (value != null || value == 'true') {
-        //     this.props.navigation.navigate('login');
-        //   } else {
-        //     this.props.navigation.navigate('OrganizationScreen');
-        //   }
-        // } catch (error) {}
       }
     };
     //The clock method is executed every second
