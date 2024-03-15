@@ -8,8 +8,22 @@ import profile from '../screens/profile';
 import tab from '../screens/tab';
 import tab1 from '../screens/tab1';
 import editprofile from '../screens/editprofile';
+import schedulemeeting from '../screens/schedulemeeting';
+import meetinglist from '../screens/meetinglist';
 const AuthNavigation = createStackNavigator(
   {
+    meetinglist: {
+      screen: meetinglist,
+      navigationOptions: {
+        headerShown: null,
+      },
+    },
+    schedulemeeting: {
+      screen: schedulemeeting,
+      navigationOptions: {
+        headerShown: null,
+      },
+    },
     editprofile: {
       screen: editprofile,
       navigationOptions: {

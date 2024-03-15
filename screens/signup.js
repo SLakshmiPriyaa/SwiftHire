@@ -192,7 +192,7 @@ class signup extends React.Component {
       </View>
     );
   }
-  check() {
+  async check() {
     this.setState({
       FullNameError: false,
       MobileNumberError: false,
@@ -227,6 +227,17 @@ class signup extends React.Component {
         ereg: false,
         DateOfBirthError: false,
       });
+      var p = await AsyncStorage.getItem('MobileNumberList');
+      var z = JSON.parse(p);
+      if (z == null) {
+        var ml = [];
+        ml.push(this.state.MobileNumber);
+        await AsyncStorage.setItem('MobileNumberList', JSON.stringify(ml));
+      } else {
+        var ml = z;
+        ml.push(this.state.MobileNumber);
+        await AsyncStorage.setItem('MobileNumberList', JSON.stringify(ml));
+      }
 
       const a = {
         FullName: this.state.FullName.trim(),
@@ -235,6 +246,19 @@ class signup extends React.Component {
         DateOfBirth: this.state.DateOfBirth,
       };
       console.log(a);
+
+      var p2 = await AsyncStorage.getItem('Userdata');
+      var z2 = JSON.parse(p2);
+      if (z2 == null) {
+        var daa = [];
+        daa.push(a);
+        await AsyncStorage.setItem('Userdata', JSON.stringify(daa));
+      } else {
+        var daa = z2;
+        daa.push(a);
+        await AsyncStorage.setItem('Userdata', JSON.stringify(daa));
+      }
+
       AsyncStorage.setItem('isLogin', 'true');
       AsyncStorage.setItem('MobileNumber', this.state.MobileNumber.toString());
       AsyncStorage.setItem('EmailID', this.state.EmailID.toString());
@@ -741,7 +765,7 @@ class signup extends React.Component {
                   datechoosed: moment(date).format('DD-MM-YYYY'),
                 });
                 this.setState({
-                  DateOfBirth: moment(date).format('YYYY-MM-DD 00:00:00'),
+                  DateOfBirth: moment(date).format('DD-MM-YYYY'),
                 });
               }}
               onCancel={() => {

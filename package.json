@@ -54,6 +54,7 @@
     "react-native-screens": "^3.22.1",
     "react-native-simple-dialogs": "^1.4.0",
     "react-native-svg": "^13.10.0",
+    "react-native-swiper-flatlist": "^3.2.3",
     "react-native-vector-icons": "^9.0.0",
     "react-native-view-shot": "^3.7.0",
     "react-native-webview": "^11.16.0",

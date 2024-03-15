@@ -71,6 +71,8 @@ class login extends React.Component {
       this.setState({wishes: 'Good Evening'});
       // console.log('good evening')
     }
+    // await AsyncStorage.removeItem('Userdata');
+    // console.log(p);
   };
   check() {
     const mreg = /^[0-9]*$/;

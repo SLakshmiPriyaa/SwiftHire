@@ -40,6 +40,7 @@ class otp extends React.Component {
       seconds: 600,
       expired: false,
       MobileNumber: null,
+      timedd: 3,
     };
     this.timer = 0;
     this.startTimer = this.startTimer.bind(this);
@@ -73,7 +74,7 @@ class otp extends React.Component {
     // console.log(MobileNumber);
     this.setState({MobileNumber: MobileNumber});
   };
-  check() {
+  async check() {
     const mreg = /^[0-9]*$/;
     // console.log();
     this.setState({UsernameError: false, invalid: false});
@@ -83,10 +84,41 @@ class otp extends React.Component {
       this.setState({invalid: true});
       console.log('sdakgbs');
     } else {
-      this.setState({UsernameError: false, invalid: false}, () => {
-        clearInterval(this.timer);
-        this.props.navigation.push('signup');
-      });
+      // console.log(this.timer);
+      this.setState({timedd: 0});
+      clearInterval(this.timer);
+      var p = await AsyncStorage.getItem('MobileNumberList');
+      var z = JSON.parse(p);
+      var p1 = await AsyncStorage.getItem('Userdata');
+      var z1 = JSON.parse(p1);
+
+      console.log(z);
+      console.log(z1);
+
+      if (z == null) {
+        this.setState({UsernameError: false, invalid: false}, () => {
+          this.props.navigation.push('signup');
+        });
+      } else {
+        if (z.includes(this.state.MobileNumber)) {
+          var cou1 = z1.filter(
+            data => data.MobileNumber == this.state.MobileNumber,
+          );
+          console.log(cou1);
+          AsyncStorage.setItem('isLogin', 'true');
+          AsyncStorage.setItem('MobileNumber', cou1[0].MobileNumber.toString());
+          AsyncStorage.setItem('EmailID', cou1[0].EmailID.toString());
+          AsyncStorage.setItem('FullName', cou1[0].FullName.toString());
+          AsyncStorage.setItem('DateOfBirth', cou1[0].DateOfBirth.toString());
+          this.setState({UsernameError: false, invalid: false}, () => {
+            this.props.navigation.push('tab');
+          });
+        } else {
+          this.setState({UsernameError: false, invalid: false}, () => {
+            this.props.navigation.push('signup');
+          });
+        }
+      }
     }
   }
   secondsToTime(secs) {
@@ -109,27 +141,33 @@ class otp extends React.Component {
     if (this.timer == 0 && this.state.seconds > 0) {
       this.timer = setInterval(this.countDown, 1000);
     }
+    // console.log(this.state.time.s);
   }
 
   countDown() {
+    // console.log(this.timer);
     // Remove one second, set state so a re-render happens.
-    let seconds = this.state.seconds - 1;
-    this.setState(
-      {
-        time: this.secondsToTime(seconds),
-        seconds: seconds,
-      },
-      () => {
-        if (this.state.time.m == 0 && this.state.time.s == 0) {
-          clearInterval(this.timer);
-          this.setState({expired: true});
-        }
-      },
-    );
-    // console.log(this.state.time);
-    // Check if we're at zero.
-    if (seconds == 0) {
-      clearInterval(this.timer);
+    if (this.state.timedd == 0) {
+    } else {
+      let seconds = this.state.seconds - 1;
+      this.setState(
+        {
+          time: this.secondsToTime(seconds),
+          seconds: seconds,
+        },
+        () => {
+          if (this.state.time.m == 0 && this.state.time.s == 0) {
+            clearInterval(this.timer);
+            // console.log(this.state.time.s);
+            // this.setState({expired: true});
+          }
+        },
+      );
+      // console.log(this.state.time);
+      // Check if we're at zero.
+      if (seconds == 0) {
+        clearInterval(this.timer);
+      }
     }
   }
   render() {
@@ -501,6 +539,7 @@ class otp extends React.Component {
               activeOpacity={0.5}
               onPress={() => {
                 // this.setState({loader: true}, () => {
+                // clearInterval(this.timer);
                 this.check();
                 // });
               }}>

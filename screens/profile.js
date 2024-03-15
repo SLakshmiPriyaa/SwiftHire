@@ -414,7 +414,7 @@ class profile extends React.Component {
             )}
             <View style={styles.body}>
               <View>
-                <Text style={styles.name}>{this.state.FullName}</Text>
+                <Text style={styles.name}>{this.state.UserName}</Text>
               </View>
             </View>
 
@@ -703,9 +703,10 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: Normalize(15),
-    color: '#f3c49b',
+    color: '#333',
     fontFamily: 'WorkSans-SemiBold',
     marginTop: hp('0.5%'),
+    marginBottom: hp('1.5%'),
     textAlign: 'center',
   },
   errorMessage: {

@@ -997,7 +997,7 @@ class editprofile extends React.Component {
                   DateofBirth1: moment(date).format('DD-MM-YYYY'),
                 });
                 this.setState({
-                  DateOfBirth: moment(date).format('YYYY-MM-DD 00:00:00'),
+                  DateOfBirth: moment(date).format('DD-MM-YYYY'),
                 });
               }}
               onCancel={() => {
